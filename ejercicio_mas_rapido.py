@@ -44,6 +44,7 @@ def lcd_string(message,line):
   for i in range(LCD_WIDTH):
     lcd_byte(ord(message[i]),LCD_CHR)
     
+
 led = LED(6)
 led2 = LED(26)
 
@@ -54,34 +55,68 @@ player_2 = Button(19)
 
 timee = random.uniform(5, 10)
 
+player1 = input("Introduce el nombre del jugador 1")
+player2 = input("Introduce el nombre del jugador 2")
+
 led.toggle()
 led2.toggle()
 
 lcd_init()
 
-lcd_string("PREPARENSE         <",LCD_LINE_1)
-lcd_string("!!!!!!!!!!        <",LCD_LINE_2)
+lcd_string(player1,LCD_LINE_1)
+lcd_string(player2,LCD_LINE_2)
 
-time.sleep(timee)
+time.sleep(2)
 
-lcd_string("YAAAAAAAAA         <",LCD_LINE_1)
-lcd_string("!!!!!!!!!!        <",LCD_LINE_2)
 
-buzzer.on()
+    
+contador_1 = 0
+contador_2 = 0
+ganador = False
+ganadorPartida = ""
+while ganador == False:
+    lcd_string("PREPARENSE         <",LCD_LINE_1)
+    lcd_string("!!!!!!!!!!        <",LCD_LINE_2)
+    time.sleep(timee)
+    lcd_string("YAAAAAAAAA         <",LCD_LINE_1)
+    lcd_string("!!!!!!!!!!        <",LCD_LINE_2)
+    buzzer.on()
+    time.sleep(0.5)
+    buzzer.off()
+    while True:
+        if player_1.is_pressed:
+            led.toggle()
+            lcd_string("HA GANADO",LCD_LINE_1)
+            lcd_string(player1,LCD_LINE_2)
+            contador_1 = contador_1 + 1
+            time.sleep(2)
+            led.toggle()
+            if contador_1 == 3:
+                led.toggle()
+                ganadorPartida = player1
+                ganador = True
+            break
+        if player_2.is_pressed:
+            led2.toggle()
+            lcd_string("HA GANADO",LCD_LINE_1)
+            lcd_string(player2,LCD_LINE_2)
+            contador_2 = contador_2 + 1
+            time.sleep(2)
+            led2.toggle()
+            if contador_2 == 3:
+                led2.toggle()
+                ganadorPartida = player2
+                ganador = True
+            break
+mensaje = player1 + " " + str(contador_1)
+mensaje2 = player2 + " " + str(contador_2)
+lcd_string(mensaje,LCD_LINE_1)
+lcd_string(mensaje2,LCD_LINE_2)
+time.sleep(1.5)
+mensaje3 = "Ha ganado "+ganadorPartida
+lcd_string("PARTIDA FINALIZADA",LCD_LINE_1)
+lcd_string(mensaje3,LCD_LINE_2)
 
-time.sleep(0.5)
-
-buzzer.off()
-
-while True:
-    if player_1.is_pressed:
-        led.toggle()
-        lcd_string("HA GANADO EL",LCD_LINE_1)
-        lcd_string("JUGADOR 1!!!!!!!!!!        <",LCD_LINE_2)
-        break
-    if player_2.is_pressed:
-        led2.toggle()
-        lcd_string("HA GANADO EL",LCD_LINE_1)
-        lcd_string("JUGADOR 2!!!!!!!!!!        <",LCD_LINE_2)
-        break
+        
+    
 
